@@ -8,7 +8,7 @@ import Anthropic from "@anthropic-ai/sdk";
 export const runtime = "nodejs";
 
 const MODEL = "claude-sonnet-4-6";
-const MAX_TOKENS = 1000;
+const MAX_TOKENS = 600;
 
 const SYSTEM = `Je bent de LinkedIn-copywriter van Montisoro (B2B, NL).
 Schrijf in vlot, professioneel Nederlands met een menselijke, scherpe toon.
@@ -18,7 +18,7 @@ Hou het bondig en klaar om te plaatsen. Voeg geen meta-uitleg toe — enkel de t
 function getClient(): Anthropic | null {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return null;
-  return new Anthropic({ apiKey: key });
+  return new Anthropic({ apiKey: key, maxRetries: 5 });
 }
 
 function reactPrompt(body: any): string {
@@ -101,8 +101,15 @@ export async function POST(req: NextRequest) {
       .trim();
     return NextResponse.json({ ok: true, text });
   } catch (e) {
+    const err = e as { status?: number; message?: string };
+    if (err.status === 429) {
+      return NextResponse.json(
+        { error: "Even te druk (rate limit). Probeer over een halve minuut opnieuw." },
+        { status: 429 }
+      );
+    }
     return NextResponse.json(
-      { error: `Claude-aanroep mislukt: ${(e as Error).message}` },
+      { error: `Claude-aanroep mislukt: ${err.message}` },
       { status: 502 }
     );
   }
