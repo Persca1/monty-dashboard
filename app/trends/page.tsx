@@ -1,7 +1,7 @@
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { fetchSignalen } from "@/lib/queries";
 import { themeOf } from "@/lib/fit";
-import { topThemas } from "@/lib/briefing";
+import { topThemas, filterPeriode, type Periode } from "@/lib/briefing";
 import {
   PageHeader,
   ConfigNotice,
@@ -11,7 +11,16 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export default async function TrendsPage() {
+export default async function TrendsPage({
+  searchParams,
+}: {
+  searchParams: { periode?: string };
+}) {
+  const geldigePeriodes: Periode[] = ["vandaag", "week", "maand", "alles"];
+  const periode: Periode = geldigePeriodes.includes(searchParams.periode as Periode)
+    ? (searchParams.periode as Periode)
+    : "alles";
+
   if (!isSupabaseConfigured()) {
     return (
       <>
@@ -33,9 +42,11 @@ export default async function TrendsPage() {
     );
   }
 
-  const themas = topThemas(signalen, 20);
+  const gefilterd = filterPeriode(signalen, periode);
+  const themas = topThemas(gefilterd, 20);
   const max = themas.length > 0 ? themas[0].aantal : 1;
-  const metThema = signalen.filter((s) => themeOf(s)).length;
+  const metThema = gefilterd.filter((s) => themeOf(s)).length;
+  
 
   return (
     <>
@@ -43,6 +54,27 @@ export default async function TrendsPage() {
         title="Trends"
         subtitle={`Meest voorkomende thema's over ${metThema} signalen`}
       />
+<div className="flex gap-2 mb-4">
+        {([
+          ["vandaag", "Vandaag"],
+          ["week", "Deze week"],
+          ["maand", "Deze maand"],
+          ["alles", "Alles"],
+        ] as const).map(([waarde, label]) => (
+          
+            <a key={waarde}
+            href={`/trends?periode=${waarde}`}
+            className={
+              "mono-label rounded px-3 py-1.5 text-[11px] " +
+              (periode === waarde
+                ? "bg-accent/80 text-white"
+                : "bg-panel2 text-muted hover:text-txt")
+            }
+          >
+            {label}
+          </a>
+        ))}
+      </div>
 
       {themas.length === 0 ? (
         <EmptyState>Nog geen thema&apos;s om te tonen.</EmptyState>

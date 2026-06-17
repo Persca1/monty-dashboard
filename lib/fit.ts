@@ -84,8 +84,7 @@ export function prioriteitOf(s: Signaal): number {
 }
 
 export function hasKans(s: Signaal): boolean {
-  const t = fitOf(s).kans?.type?.trim().toLowerCase();
-  return Boolean(t) && t !== "geen";
+  return klantkansOf(s) >= 70;
 }
 
 export function shouldReact(s: Signaal): boolean {
