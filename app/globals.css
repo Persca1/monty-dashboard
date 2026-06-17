@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0b0c0e;
+  --panel: #141619;
+  --panel2: #1b1e22;
+  --line: #2a2f35;
+  --accent: #e8542a;
+  --green: #5bbf7a;
+  --amber: #e0a33c;
+  --txt: #e8eaed;
+  --txt2: #9ba1a9;
+  --muted: #6b7078;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--txt);
+}
+
+body {
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Strakke, premium scrollbar in donkere stijl */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+@layer components {
+  .mono-label {
+    font-family: var(--font-jetbrains), "JetBrains Mono", monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .heading-serif {
+    font-family: var(--font-spectral), Spectral, Georgia, serif;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .panel-2 {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+}

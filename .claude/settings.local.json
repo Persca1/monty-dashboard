@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(open -t /Users/alirezahosseini/monty-dashboard/.env.local)",
+      "Bash(curl -s http://localhost:3000/)"
+    ]
+  }
+}
