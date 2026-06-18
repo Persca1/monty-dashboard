@@ -5,6 +5,7 @@ import { PageHeader, ConfigNotice, ErrorNotice, EmptyState } from "@/components/
 import { Chip } from "@/components/Chips";
 import { VerwijderKnop } from "./VerwijderKnop";
 import { GelezenKnop } from "./GelezenKnop";
+import { OpvolgKnop } from "./OpvolgKnop";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +58,7 @@ export default async function KansenPage() {
                   <span />
                 )}
                 <div className="flex items-center gap-3">
+                  <OpvolgKnop id={s.id} opvolgen={!!s.opvolgen} />
                   <GelezenKnop id={s.id} gelezen={!!s.gelezen} />
                   <VerwijderKnop id={s.id} />
                 </div>

@@ -27,3 +27,12 @@ export async function toggleGelezen(id: number, gelezen: boolean) {
     .eq("id", id);
   revalidatePath("/kansen");
 }
+export async function toggleOpvolgen(id: number, opvolgen: boolean) {
+  const supabase = getClient();
+  await supabase
+    .from("signaal")
+    .update({ opvolgen })
+    .eq("id", id);
+  revalidatePath("/kansen");
+  revalidatePath("/opvolgen");
+}
