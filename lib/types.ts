@@ -76,6 +76,8 @@ export interface Signaal {
   relevantie_score: number | null;
   klantkans_score: number | null;
   waarom_nu: string | null;
+  bron_naam: string | null;
+  url: string | null;
   fit_rapport: FitRapport | null;
   hash: string | null;
   aangemaakt_op: string | null;
