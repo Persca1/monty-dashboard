@@ -84,7 +84,7 @@ export interface Signaal {
   aangemaakt_op: string | null;
   done: boolean | null;
   gelezen: boolean | null;
-  pvolgen: boolean | null;
+  opvolgen: boolean | null;
   verwijderd: boolean | null;
   verwijderd_op: string | null;
 }
