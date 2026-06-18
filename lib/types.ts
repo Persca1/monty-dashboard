@@ -22,6 +22,7 @@ export interface FitArtikel {
   relevant?: "JA" | "NEE" | string;
   thema?: string;
   samenvatting?: string;
+  waarom_nu?: string;
   relevantie_score?: number;
   klantkans_score?: number;
   impact?: string[];
@@ -87,6 +88,7 @@ export interface Signaal {
   opvolgen: boolean | null;
   verwijderd: boolean | null;
   verwijderd_op: string | null;
+  korte_samenvatting: string | null;
 }
 
 export type BedrijfStatus = "prospect" | "bellen" | "gecontacteerd" | "klant" | string;
