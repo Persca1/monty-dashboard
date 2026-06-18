@@ -9,6 +9,7 @@ const TABS = [
   { href: "/vandaag", label: "Vandaag" },
   { href: "/bedrijven", label: "Bedrijven" },
   { href: "/kansen", label: "Kansen" },
+  { href: "/opvolgen", label: "Opvolgen" },
   { href: "/acties", label: "Acties" },
   { href: "/trends", label: "Trends" },
   { href: "/copywriter", label: "Copywriter" },
