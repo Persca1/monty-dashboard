@@ -1,5 +1,6 @@
 import type { FitRapport, Signaal, Tier, PNiveau } from "./types";
 
+
 // Tolerante helpers rond signaal + fit_rapport. n8n kan velden leeg laten;
 // we vallen altijd terug op iets bruikbaars.
 
@@ -42,7 +43,7 @@ export function companyName(s: Signaal): string {
 
 export function themeOf(s: Signaal): string {
   const fit = fitOf(s);
-  return fit.artikel?.thema?.trim() || "";
+ return fit.artikel?.thema?.trim() || fit.nl_titel?.trim() || s.titel?.trim() || "";
 }
 
 export function tierOf(s: Signaal): Tier | null {
