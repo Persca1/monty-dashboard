@@ -4,6 +4,7 @@ import { hasKans, displayTitle, companyName, klantkansOf } from "@/lib/fit";
 import { PageHeader, ConfigNotice, ErrorNotice, EmptyState } from "@/components/ui";
 import { Chip } from "@/components/Chips";
 import { VerwijderKnop } from "./VerwijderKnop";
+import { GelezenKnop } from "./GelezenKnop";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,7 @@ export default async function KansenPage() {
       ) : (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {kansen.map((s) => (
-            <div key={s.id} className="panel border-l-[3px] border-l-accent p-4">
+            <div key={s.id} className={`panel border-l-[3px] border-l-accent p-4 ${s.gelezen ? "opacity-50" : ""}`}>
               <div className="mb-2 flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   {s.bron_naam && <span className="mono-label text-[11px] text-accent">{s.bron_naam}</span>}
@@ -55,7 +56,10 @@ export default async function KansenPage() {
                 ) : (
                   <span />
                 )}
-                <VerwijderKnop id={s.id} />
+                <div className="flex items-center gap-3">
+                  <GelezenKnop id={s.id} gelezen={!!s.gelezen} />
+                  <VerwijderKnop id={s.id} />
+                </div>
               </div>
             </div>
           ))}

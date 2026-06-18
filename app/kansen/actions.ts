@@ -18,3 +18,12 @@ export async function verwijderSignaal(id: number) {
     .eq("id", id);
   revalidatePath("/kansen");
 }
+
+export async function toggleGelezen(id: number, gelezen: boolean) {
+  const supabase = getClient();
+  await supabase
+    .from("signaal")
+    .update({ gelezen })
+    .eq("id", id);
+  revalidatePath("/kansen");
+}
