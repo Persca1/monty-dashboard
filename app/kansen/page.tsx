@@ -3,6 +3,7 @@ import { fetchSignalen } from "@/lib/queries";
 import { hasKans, displayTitle, companyName, klantkansOf } from "@/lib/fit";
 import { PageHeader, ConfigNotice, ErrorNotice, EmptyState } from "@/components/ui";
 import { Chip } from "@/components/Chips";
+import { VerwijderKnop } from "./VerwijderKnop";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +26,10 @@ export default async function KansenPage() {
     return (<><PageHeader title="Kansen" /><ErrorNotice message={(e as Error).message} /></>);
   }
 
-  const kansen = signalen.filter(hasKans).sort((a, b) => klantkansOf(b) - klantkansOf(a));
+  const kansen = signalen
+    .filter((s) => !s.verwijderd)
+    .filter(hasKans)
+    .sort((a, b) => klantkansOf(b) - klantkansOf(a));
 
   return (
     <>
@@ -45,9 +49,14 @@ export default async function KansenPage() {
               </div>
               <h3 className="heading-serif mb-2 text-[15px] leading-snug text-txt">{displayTitle(s)}</h3>
               {s.waarom_nu && <p className="mb-3 text-sm leading-relaxed text-txt2">{s.waarom_nu}</p>}
-              {s.url && (
-                <a href={s.url} target="_blank" rel="noopener noreferrer" className="mono-label text-[10px] text-muted hover:text-accent">lees artikel →</a>
-              )}
+              <div className="flex items-center justify-between gap-2">
+                {s.url ? (
+                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="mono-label text-[10px] text-muted hover:text-accent">lees artikel →</a>
+                ) : (
+                  <span />
+                )}
+                <VerwijderKnop id={s.id} />
+              </div>
             </div>
           ))}
         </div>

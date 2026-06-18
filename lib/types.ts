@@ -83,6 +83,10 @@ export interface Signaal {
   hash: string | null;
   aangemaakt_op: string | null;
   done: boolean | null;
+  gelezen: boolean | null;
+  pvolgen: boolean | null;
+  verwijderd: boolean | null;
+  verwijderd_op: string | null;
 }
 
 export type BedrijfStatus = "prospect" | "bellen" | "gecontacteerd" | "klant" | string;
