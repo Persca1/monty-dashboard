@@ -8,7 +8,7 @@ import Anthropic from "@anthropic-ai/sdk";
 export const runtime = "nodejs";
 
 const MODEL = "claude-sonnet-4-6";
-const MAX_TOKENS = 600;
+const MAX_TOKENS = 3000;
 
 const SYSTEM = `Je bent de LinkedIn-copywriter van Montisoro (B2B, NL).
 Schrijf in vlot, professioneel Nederlands met een menselijke, scherpe toon.
@@ -58,6 +58,32 @@ Geef per idee:
 Nummer ze 1, 2, 3. Bondig en direct bruikbaar.`;
 }
 
+function top6Prompt(signalen: any[]): string {
+  const lijst = signalen.map((s, i) => {
+    return `SIGNAAL ${i + 1}
+Titel: ${s.titel}
+Bedrijf: ${s.bedrijf || "-"}
+Thema: ${s.thema || "-"}
+Samenvatting: ${s.samenvatting || "-"}
+Waarom relevant: ${s.waarom || "-"}`;
+  }).join("\n\n");
+
+  return `Hieronder staan de ${signalen.length} sterkste signalen van vandaag uit het Montisoro Pulse-dashboard. Schrijf voor ELK signaal één kant-en-klare LinkedIn-post.
+
+${lijst}
+
+Lever voor elk signaal exact dit formaat (en niets anders ertussen):
+
+=== POST [nummer] ===
+tekst:
+[de volledige, plaatsbare LinkedIn-post — 120-200 woorden, menselijke scherpe toon, hooguit 1 emoji, max 3 relevante hashtags]
+
+waarom:
+[2-3 zinnen: waarom deze post nu werkt, welk signaal en welke invalshoek, voor welke doelgroep]
+
+Schrijf alle ${signalen.length} posts. Begin direct met "=== POST 1 ===".`;
+}
+
 export async function POST(req: NextRequest) {
   const client = getClient();
   if (!client) {
@@ -80,6 +106,8 @@ export async function POST(req: NextRequest) {
     prompt = reactPrompt(body);
   } else if (mode === "ideas") {
     prompt = ideasPrompt(Array.isArray(body.themas) ? body.themas : []);
+  } else if (mode === "top6") {
+    prompt = top6Prompt(Array.isArray(body.signalen) ? body.signalen : []);
   } else {
     return NextResponse.json(
       { error: "Onbekende mode. Gebruik 'react' of 'ideas'." },

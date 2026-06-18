@@ -12,6 +12,16 @@ export interface ReageerItem {
   samenvatting: string;
 }
 
+export interface Top6Item {
+  id: number;
+  titel: string;
+  bedrijf: string;
+  thema: string;
+  samenvatting: string;
+  waarom: string;
+  score: number;
+}
+
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
   return (
@@ -127,13 +137,32 @@ function ReageerKaart({ item }: { item: ReageerItem }) {
 export default function Copywriter({
   items,
   themas,
+  top6,
 }: {
   items: ReageerItem[];
   themas: string[];
+  top6: Top6Item[];
 }) {
   const [ideas, setIdeas] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  const [posts, setPosts] = useState<string | null>(null);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [postsErr, setPostsErr] = useState<string | null>(null);
+
+  async function genereerPosts() {
+    setPostsLoading(true);
+    setPostsErr(null);
+    try {
+      const t = await callCopywriter({ mode: "top6", signalen: top6 });
+      setPosts(t);
+    } catch (e) {
+      setPostsErr((e as Error).message);
+    } finally {
+      setPostsLoading(false);
+    }
+  }
 
   async function genereer() {
     setLoading(true);
@@ -149,6 +178,33 @@ export default function Copywriter({
   }
 
   return (
+    <>
+    <section className="mb-8">
+      <h2 className="mono-label mb-3 text-[11px] text-txt2">
+        Top 6 posts · automatisch
+      </h2>
+      <div className="panel p-4">
+        <p className="mb-3 text-sm text-txt2">
+          Pakt de 6 sterkste signalen van het dashboard en schrijft er
+          kant-en-klare LinkedIn-posts bij.
+          {top6.length > 0 ? ` (${top6.length} geselecteerd)` : " (geen signalen)"}
+        </p>
+        <button
+          onClick={genereerPosts}
+          disabled={postsLoading || top6.length === 0}
+          className="mono-label rounded-md border border-accent/50 bg-accent/15 px-3 py-1.5 text-[11px] text-accent transition-colors hover:bg-accent/25 disabled:opacity-50"
+        >
+          {postsLoading ? "Schrijft 6 posts…" : "Genereer 6 posts"}
+        </button>
+        {postsErr && (
+          <div className="mt-3 rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-accent">
+            {postsErr}
+          </div>
+        )}
+        {posts && <ResultBox text={posts} />}
+      </div>
+    </section>
+
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
       <section>
         <h2 className="mono-label mb-3 text-[11px] text-txt2">
@@ -192,5 +248,6 @@ export default function Copywriter({
         </div>
       </section>
     </div>
+    </>
   );
 }
