@@ -6,6 +6,13 @@ import { Chip } from "@/components/Chips";
 
 export const dynamic = "force-dynamic";
 
+function formatDatum(d: string | null): string {
+  if (!d) return "";
+  const datum = new Date(d);
+  if (isNaN(datum.getTime())) return "";
+  return datum.toLocaleDateString("nl-BE", { day: "numeric", month: "long", year: "numeric" });
+}
+
 export default async function KansenPage() {
   if (!isSupabaseConfigured()) {
     return (<><PageHeader title="Kansen" /><ConfigNotice /></>);
@@ -30,16 +37,13 @@ export default async function KansenPage() {
           {kansen.map((s) => (
             <div key={s.id} className="panel border-l-[3px] border-l-accent p-4">
               <div className="mb-2 flex items-center justify-between gap-2">
-                {s.bron_naam && <span className="mono-label text-[11px] text-accent">{s.bron_naam}</span>}
+                <div className="flex items-center gap-2">
+                  {s.bron_naam && <span className="mono-label text-[11px] text-accent">{s.bron_naam}</span>}
+                  {s.gepubliceerd_op && <span className="text-[11px] text-muted">{formatDatum(s.gepubliceerd_op)}</span>}
+                </div>
                 {companyName(s) && <Chip>{companyName(s)}</Chip>}
               </div>
-              <h3 className="heading-serif mb-2 text-[15px] leading-snug text-txt">
-                {s.url ? (
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="hover:text-accent hover:underline">{displayTitle(s)}</a>
-                ) : (
-                  displayTitle(s)
-                )}
-              </h3>
+              <h3 className="heading-serif mb-2 text-[15px] leading-snug text-txt">{displayTitle(s)}</h3>
               {s.waarom_nu && <p className="mb-3 text-sm leading-relaxed text-txt2">{s.waarom_nu}</p>}
               {s.url && (
                 <a href={s.url} target="_blank" rel="noopener noreferrer" className="mono-label text-[10px] text-muted hover:text-accent">lees artikel →</a>

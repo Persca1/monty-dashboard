@@ -78,6 +78,7 @@ export interface Signaal {
   waarom_nu: string | null;
   bron_naam: string | null;
   url: string | null;
+  gepubliceerd_op: string | null;
   fit_rapport: FitRapport | null;
   hash: string | null;
   aangemaakt_op: string | null;
